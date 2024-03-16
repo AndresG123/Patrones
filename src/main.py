@@ -15,9 +15,9 @@ class BaseHandler:
 
 class AuthenticationManager(BaseHandler):
     def handle_request(self, request):
-        # lógica de autenticación
         print("Autenticando usuario...")
-        #autenticación exitosa
+        if self._successor is not None:
+            return self._successor.handle_request(request)
         return True
 
 class DataSanitization(BaseHandler):
