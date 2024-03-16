@@ -15,26 +15,26 @@ class BaseHandler:
 
 class AuthenticationManager(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de autenticación
+        # lógica de autenticación
         print("Autenticando usuario...")
-        # Simulación de autenticación exitosa
+        #autenticación exitosa
         return True
 
 class DataSanitization(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de validación y saneamiento de datos
+        # lógica saneamiento de datos
         print("Validando y saneando datos...")
         return True
 
 class BruteForceProtection(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de filtrado de solicitudes por dirección IP
+        # lógica de filtrado de solicitudes por IP
         print("Filtrando solicitudes por dirección IP...")
         return True
 
 class CacheManager(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de gestión de caché
+        # lógica de gestión de caché
         print("Gestionando caché de respuestas...")
         return True
 
@@ -46,13 +46,12 @@ def main():
     brute_force_protection = BruteForceProtection()
     cache_manager = CacheManager()
 
-    # Configurar la cadena de responsabilidad
     authentication_manager._successor = data_sanitization
     data_sanitization._successor = brute_force_protection
     brute_force_protection._successor = cache_manager
 
-    # Simular solicitud de orden
-    request = {}  # Aquí irían los datos de la solicitud
+    #solicitud de orden
+    request = {}  # datos de la solicitud pendientes
     if authentication_manager.handle_request(request):
         print("Solicitud procesada con éxito.")
     else:
