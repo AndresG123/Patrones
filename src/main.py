@@ -15,28 +15,53 @@ class BaseHandler:
 
 class AuthenticationManager(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de autenticación
-        print("Autenticando usuario...")
-        # Simulación de autenticación exitosa
-        return True
+        if request.get("email") == "usuario" and request.get("password") == "contraseña":
+            print("Autenticación exitosa.")
+            return True
+        else:
+            print("Autenticación fallida.")
+            return False
 
 class DataSanitization(BaseHandler):
     def handle_request(self, request):
-        # Aquí iría la lógica de validación y saneamiento de datos
-        print("Validando y saneando datos...")
-        return True
+        if all(key in request for key in ["email", "password"]):
+            print("Datos válidos y saneados.")
+            return True
+        else:
+            print("Datos inválidos.")
+            return False
 
 class BruteForceProtection(BaseHandler):
+    def __init__(self):
+        self.failed_attempts = {}
+
     def handle_request(self, request):
-        # Aquí iría la lógica de filtrado de solicitudes por dirección IP
-        print("Filtrando solicitudes por dirección IP...")
-        return True
+        ip = request.get("ip")
+        if ip in self.failed_attempts:
+            if self.failed_attempts[ip] >= 3:
+                print("Se han excedido los intentos fallidos desde esta IP.")
+                return False
+            else:
+                self.failed_attempts[ip] += 1
+                print("Intento de acceso fallido.")
+                return True
+        else:
+            self.failed_attempts[ip] = 1
+            print("Intento de acceso fallido.")
+            return True
 
 class CacheManager(BaseHandler):
+    def __init__(self):
+        self.cache = {}
+
     def handle_request(self, request):
-        # Aquí iría la lógica de gestión de caché
-        print("Gestionando caché de respuestas...")
-        return True
+        if request.get("cache_key") in self.cache:
+            print("Respuesta obtenida de la caché.")
+            return True
+        else:
+            self.cache[request.get("cache_key")] = request.get("response")
+            print("Respuesta almacenada en caché.")
+            return True
 
 def main():
     # Crear instancias de las clases
@@ -51,7 +76,6 @@ def main():
     data_sanitization._successor = brute_force_protection
     brute_force_protection._successor = cache_manager
 
-    # Simular solicitud de orden
     request = {}  # Aquí irían los datos de la solicitud
     if authentication_manager.handle_request(request):
         print("Solicitud procesada con éxito.")
